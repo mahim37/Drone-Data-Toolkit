@@ -40,7 +40,8 @@ def get_file_size(path):
 
 
 if __name__ == '__main__':
-    file_path = input("Enter the path of the text file: ")
+    # file_path = input("Enter the path of the text file: ")
+    file_path = "SampleData/DJI3.txt"
     file_size = get_file_size(file_path)
     mapped_file = map_file(file_path)
     file_ptr = [0]
@@ -58,12 +59,12 @@ if __name__ == '__main__':
     if header_record_size < min_file_size or header_record_size > file_size:
         print(f"Error: '{file_path}': Bad File Size: {header_record_size} ")
         sys.exit(1)
-    empty = 1
-    while empty:
-        data = unpack.unpack_uint8(file_ptr, mapped_file)
-        if data != 0:
-            empty = 0
-    file_ptr[0] -= 1
 
     obj = record.RecordDetail()
+    file_ptr[0] = header_record_size
+    obj.parse_details(file_ptr, mapped_file)
+
+    file_ptr[0] = header_size
+    # while file_ptr[0] < len(mapped_file):
     obj.parse_record(file_ptr, mapped_file, is_scrambled)
+    # break

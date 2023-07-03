@@ -12,7 +12,7 @@ def unpack_uint8(ptr, data):
 def unpack_uint16_le(ptr, data):
     if ptr[0] + 2 > len(data):
         raise ValueError("END_OF_DATA")
-    result = struct.unpack('<L', data[ptr[0]:ptr[0] + 2])[0]
+    result = struct.unpack('<H', data[ptr[0]:ptr[0] + 2])[0]
     ptr[0] += 2
     return result
 
