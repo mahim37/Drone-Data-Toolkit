@@ -1,6 +1,4 @@
-import scramble
-import unpack
-from src import parser_osd
+from src import parser_osd, unpack, scramble
 
 
 class RecordType:
