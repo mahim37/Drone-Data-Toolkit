@@ -65,6 +65,6 @@ if __name__ == '__main__':
     obj.parse_details(file_ptr, mapped_file)
 
     file_ptr[0] = header_size
-    # while file_ptr[0] < len(mapped_file):
-    obj.parse_record(file_ptr, mapped_file, is_scrambled)
-    # break
+    while file_ptr[0] < len(mapped_file):
+        if not obj.parse_record(file_ptr, mapped_file, is_scrambled):
+            break

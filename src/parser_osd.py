@@ -1,11 +1,11 @@
+import pandas as pd
+
 from src import parse_field_wrecord, unpack
 
 
-def output_csv(df):
-    df.to_csv('output.csv')
-
-
 def parse_record_osd(ptr, data, length):
+    column = ['Latitude', 'Longitude', 'Height', 'x_Speed', 'y_Speed', 'z_Speed', 'Pitch',
+              'roll', 'yaw', 'rc_State', 'flyc_State', 'flyc_command', 'battery', 'flight_time']
     longitude = parse_field_wrecord.note_8byte_field_radians("OSD.longitude", ptr, data)
     latitude = parse_field_wrecord.note_8byte_field_radians("OSD.latitude", ptr, data)
 
@@ -50,16 +50,16 @@ def parse_record_osd(ptr, data, length):
     length -= 4
 
     battery = parse_field_wrecord.note_byte_field("OSD.battery", ptr, data)
-    sWave_height = parse_field_wrecord.note_byte_field("OSD.sWave_height", ptr, data, 10)
+    swave_height = parse_field_wrecord.note_byte_field("OSD.sWave_height", ptr, data, 10)
     flight_time = parse_field_wrecord.note_2byte_field_signed("OSD.flight_time", ptr, data, 10)
     motor_revolution = parse_field_wrecord.note_byte_field("OSD.motor_revolutions", ptr, data)
-    print(battery, flight_time)
+
     # Unknown 2 Bytes
     ptr[0] += 2
     length -= 8
     flyc_version = parse_field_wrecord.note_byte_field("OSD.flyc_version", ptr, data)
     drone_type = parse_field_wrecord.note_byte_field("OSD.drone_type.RAW", ptr, data)
-    print(flyc_version)
+
     imu_fail_cause = parse_field_wrecord.note_byte_field("OSD.imu_fail_cause", ptr, data)
     length -= 3
 
@@ -69,3 +69,7 @@ def parse_record_osd(ptr, data, length):
         ptr[0] += 1
         ctrl_device = parse_field_wrecord.note_byte_field("OSD.ctrl_device.RAW", ptr, data)
         ptr[0] += 1
+
+    entries = pd.DataFrame([[latitude, longitude, height, x_speed, y_speed, z_speed, pitch, roll, yaw,
+                             rc_state, fly_state, fly_command, battery, flight_time]], columns=column)
+    entries.to_csv('output.csv', mode='a', index=False)

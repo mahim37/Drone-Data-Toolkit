@@ -32,7 +32,6 @@ class RecordDetail:
         try:
             record_type = unpack.unpack_uint8(ptr, data)
             record_length = unpack.unpack_uint8(ptr, data)
-            print(record_type, record_length)
             self.num_records += 1
             stat = self.record_type_stats[record_type]
             stat.count += 1
@@ -50,8 +49,7 @@ class RecordDetail:
             record_start = [ptr[0]]
             record_limit = [ptr[0] + record_length]
             ptr[0] += record_length + 1
-            unscrambled_data = [bytes for _ in range(record_length - 1)]
-            print(record_start, record_limit)
+            unscrambled_data = [int for _ in range(record_length - 1)]
 
             if is_scrambled:
                 key_index_low = unpack.unpack_uint8(record_start, data)
@@ -67,10 +65,15 @@ class RecordDetail:
             record_start = [0]
 
             match record_type:
-                case RECORD_TYPE_OSD:
+                case 0x01:
                     parser_osd.parse_record_osd(record_start, bytes(unscrambled_data), record_length)
+                case _:
+                    pass
+
                 # Implement for other cases.
-            
+                # case RECORD_TYPE_HOME:
+                #     parse_home.parse_record_home(record_start, bytes(unscrambled_data), record_length)
+
         except Exception:
             print("Unable to parse record")
             return False
