@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 from src import parse_field_wrecord, unpack
@@ -72,4 +74,4 @@ def parse_record_osd(ptr, data, length):
 
     entries = pd.DataFrame([[latitude, longitude, height, x_speed, y_speed, z_speed, pitch, roll, yaw,
                              rc_state, fly_state, fly_command, battery, flight_time]], columns=column)
-    entries.to_csv('output.csv', mode='a', index=False)
+    entries.to_csv('output.csv', mode='a', index=False, header=not os.path.exists('output.csv'))
