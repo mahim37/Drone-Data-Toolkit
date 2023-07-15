@@ -27,6 +27,7 @@ class RecordDetail:
         need_upload = parse_field_wrecord.note_byte_field("DETAILS.need_upload", ptr, data)
         # record_line_count = parse_field_wrecord.
         ptr[0] += 4
+        # print(city, city_part, area, street)
 
     def parse_record(self, ptr, data, is_scrambled):
         try:
@@ -41,31 +42,28 @@ class RecordDetail:
                 stat.min_length = record_length
             if record_length > stat.max_length:
                 stat.max_length = record_length
-
             if ptr[0] + record_length + 1 > len(data):
-                raise Exception("Record length exceeds data length")
+                raise ValueError("Record length exceeds data length")
             if data[ptr[0] + record_length] != 0xFF:
-                raise Exception("Record length does not end with 0xFF")
+                raise ValueError("Record length does not end with 0xFF")
             record_start = [ptr[0]]
-            record_limit = [ptr[0] + record_length]
             ptr[0] += record_length + 1
             unscrambled_data = [int for _ in range(record_length - 1)]
 
-            if is_scrambled:
-                key_index_low = unpack.unpack_uint8(record_start, data)
-                scramble_table_index = ((record_type - 1) << 8) | key_index_low
-                record_length -= 1
-
-                if scramble_table_index >= 0x1000:
-                    raise Exception("Record length exceeds scramble table")
-                else:
-                    scramble_bytes = scramble.scramble_table[scramble_table_index]
-                    for i in range(record_length):
-                        unscrambled_data[i] = unpack.unpack_uint8(record_start, data) ^ scramble_bytes[i % 8]
-            record_start = [0]
-
             match record_type:
                 case 0x01:
+                    if is_scrambled:
+                        key_index_low = unpack.unpack_uint8(record_start, data)
+                        scramble_table_index = ((record_type - 1) << 8) | key_index_low
+                        record_length -= 1
+
+                        if scramble_table_index >= 0x1000:
+                            raise ValueError("Record length exceeds scramble table")
+                        else:
+                            scramble_bytes = scramble.scramble_table[scramble_table_index]
+                            for i in range(record_length):
+                                unscrambled_data[i] = unpack.unpack_uint8(record_start, data) ^ scramble_bytes[i % 8]
+                    record_start = [0]
                     parser_osd.parse_record_osd(record_start, bytes(unscrambled_data), record_length)
                 case _:
                     pass
@@ -74,8 +72,9 @@ class RecordDetail:
                 # case RECORD_TYPE_HOME:
                 #     parse_home.parse_record_home(record_start, bytes(unscrambled_data), record_length)
 
-        except Exception:
-            print("Unable to parse record")
+        except ValueError:
+            print("All features were not implemented!!")
+            print("Partially Parsed Records.")
             return False
 
         return True

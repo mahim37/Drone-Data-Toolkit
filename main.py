@@ -41,7 +41,7 @@ def get_file_size(path):
 
 if __name__ == '__main__':
     # file_path = input("Enter the path of the text file: ")
-    file_path = "SampleData/DJI3.txt"
+    file_path = "SampleData/DJIMavicPro.txt"
     file_size = get_file_size(file_path)
     mapped_file = map_file(file_path)
     file_ptr = [0]
@@ -68,3 +68,4 @@ if __name__ == '__main__':
     while file_ptr[0] < len(mapped_file):
         if not obj.parse_record(file_ptr, mapped_file, is_scrambled):
             break
+    print("Done Parsing Record!")

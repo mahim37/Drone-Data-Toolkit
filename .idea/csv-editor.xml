@@ -3,6 +3,34 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/SampleData/raw/DJI_Matrice_210/DF059/2018_June/controller_tablet_intact/2443-DJIFlightRecord_2018-06-21_[16-39-48].csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/SampleData/raw/DJI_Matrice_210/DF060/2018_June/table_physical_intact/extracted_279-DJIFlightRecord_2018-06-20_[16-54-17].csv.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/SampleData/raw/DJI_Matrice_210/DF060/2018_June/table_physical_intact/extracted_835-20-06-2018-095XF4200202G5.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/SampleData/raw/parsed.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/output.csv">
           <value>
             <Attribute>
