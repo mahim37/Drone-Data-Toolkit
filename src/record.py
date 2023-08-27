@@ -1,4 +1,4 @@
-from src import parser_osd, unpack, scramble, parse_field_wrecord
+from src import parser_osd, unpack, parse_field_wrecord, scramblebytes
 
 
 class RecordType:
@@ -53,16 +53,19 @@ class RecordDetail:
             match record_type:
                 case 0x01:
                     if is_scrambled:
+                        #
                         key_index_low = unpack.unpack_uint8(record_start, data)
                         scramble_table_index = ((record_type - 1) << 8) | key_index_low
+                        # print(scramble_table_index) 226
                         record_length -= 1
-
-                        if scramble_table_index >= 0x1000:
-                            raise ValueError("Record length exceeds scramble table")
-                        else:
-                            scramble_bytes = scramble.scramble_table[scramble_table_index]
-                            for i in range(record_length):
-                                unscrambled_data[i] = unpack.unpack_uint8(record_start, data) ^ scramble_bytes[i % 8]
+                        #
+                        # if scramble_table_index >= 0x1000:
+                        #     raise ValueError("Record length exceeds scramble table")
+                        # else:
+                        scramble_bytes = scramblebytes.get_scramble_bytes(record_type, key_index_low)
+                        # print(scramble_bytes)
+                        for i in range(record_length):
+                            unscrambled_data[i] = unpack.unpack_uint8(record_start, data) ^ scramble_bytes[i % 8]
                     record_start = [0]
                     parser_osd.parse_record_osd(record_start, bytes(unscrambled_data), record_length)
                 case _:

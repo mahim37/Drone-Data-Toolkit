@@ -31,6 +31,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="$USER_HOME$/Downloads/Jun-29th-2017-01-39PM-Flight-Airdata.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/output.csv">
           <value>
             <Attribute>
